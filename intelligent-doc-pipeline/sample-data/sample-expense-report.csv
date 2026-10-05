@@ -1,0 +1,11 @@
+Date,Description,Category,Vendor,Amount,Receipt
+2024-11-01,Flight SFO to JFK (round trip),Travel,United Airlines,680.00,Yes
+2024-11-01,Hotel - Marriott NYC (3 nights),Travel,Marriott,870.00,Yes
+2024-11-02,Client dinner - Nobu,Meals,Nobu Restaurant,420.00,Yes
+2024-11-02,Uber to client office,Transport,Uber,35.00,Yes
+2024-11-02,Uber from client office,Transport,Uber,42.00,Yes
+2024-11-03,Conference registration - AI Summit,Professional Dev,AI Summit Inc,1200.00,Yes
+2024-11-03,Team lunch,Meals,Local Cafe,185.00,Yes
+2024-11-03,Office supplies - printer paper,Supplies,Staples,89.00,Yes
+2024-11-04,Uber to airport,Transport,Uber,38.00,Yes
+2024-11-04,Airport parking (3 days),Transport,SFO Parking,120.00,Yes

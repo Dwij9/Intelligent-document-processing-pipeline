@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: idp-backend
+spec:
+  selector:
+    app: idp-backend
+  ports:
+    - port: 4000
+      targetPort: 4000
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: idp-ml-service
+spec:
+  selector:
+    app: idp-ml-service
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: idp-frontend
+spec:
+  selector:
+    app: idp-frontend
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: idp-mongodb
+spec:
+  selector:
+    app: idp-mongodb
+  ports:
+    - port: 27017
+      targetPort: 27017
+  type: ClusterIP

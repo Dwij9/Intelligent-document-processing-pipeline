@@ -1,0 +1,57 @@
+{
+  "family": "idp-pipeline",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "3072",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/idp-backend:latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 4000, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "PORT", "value": "4000" },
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "ML_SERVICE_URL", "value": "http://localhost:8000" }
+      ],
+      "secrets": [
+        { "name": "MONGODB_URI", "valueFrom": "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/idp/mongodb-uri" },
+        { "name": "LLM_API_KEY", "valueFrom": "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/idp/llm-api-key" },
+        { "name": "JWT_SECRET", "valueFrom": "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/idp/jwt-secret" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/idp-pipeline",
+          "awslogs-region": "REGION",
+          "awslogs-stream-prefix": "backend"
+        }
+      }
+    },
+    {
+      "name": "ml-service",
+      "image": "ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/idp-ml-service:latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 8000, "protocol": "tcp" }
+      ],
+      "secrets": [
+        { "name": "LLM_API_KEY", "valueFrom": "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/idp/llm-api-key" },
+        { "name": "MONGODB_URI", "valueFrom": "arn:aws:ssm:REGION:ACCOUNT_ID:parameter/idp/mongodb-uri" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/idp-pipeline",
+          "awslogs-region": "REGION",
+          "awslogs-stream-prefix": "ml-service"
+        }
+      }
+    }
+  ]
+}

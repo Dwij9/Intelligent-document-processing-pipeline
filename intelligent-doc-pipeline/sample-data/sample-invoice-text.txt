@@ -1,0 +1,38 @@
+--- Page 1 ---
+
+ACME CORPORATION
+123 Business Park Drive
+San Francisco, CA 94105
+Tel: (415) 555-0100
+
+INVOICE
+
+Invoice Number: INV-2024-0847
+Invoice Date: November 15, 2024
+Due Date: December 15, 2024
+Payment Terms: Net 30
+
+Bill To:
+TechCo Industries
+456 Innovation Way
+Palo Alto, CA 94301
+
+Description | Qty | Unit Price | Amount
+Standing desks (adjustable, 60") | 5 | $850.00 | $4,250.00
+Ergonomic office chairs (Model X) | 5 | $620.00 | $3,100.00
+Monitor arms (dual, 27" compatible) | 10 | $89.00 | $890.00
+Delivery, assembly, and setup | 1 | $3,078.00 | $3,078.00
+
+Subtotal: $11,318.00
+Tax (10%): $1,131.80
+Total Due: $12,449.80
+
+Payment Instructions:
+Wire transfer to Acme Corp
+Account: 1234567890
+Routing: 021000021
+
+Notes: All items covered by 2-year manufacturer warranty.
+Please reference invoice number on all correspondence.
+
+Thank you for your business!

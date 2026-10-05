@@ -1,0 +1,11 @@
+InvoiceNumber,Vendor,Date,DueDate,Description,Quantity,UnitPrice,Amount,Tax,Total,Category
+INV-001,Acme Corporation,2024-10-15,2024-11-14,Standing desks,5,850.00,4250.00,425.00,4675.00,Office Supplies
+INV-002,Acme Corporation,2024-10-15,2024-11-14,Ergonomic chairs,5,620.00,3100.00,310.00,3410.00,Office Supplies
+INV-003,CloudServe Inc,2024-10-01,2024-11-30,AWS reserved instances (annual),1,102000.00,102000.00,0.00,102000.00,Cloud Infrastructure
+INV-004,CloudServe Inc,2024-10-01,2024-11-30,S3 storage (10TB annual),1,24000.00,24000.00,0.00,24000.00,Cloud Infrastructure
+INV-005,Delta Logistics,2024-10-28,2024-11-27,Freight shipping - pallets,12,280.00,3360.00,336.00,3696.00,Shipping
+INV-006,Delta Logistics,2024-10-28,2024-11-27,Express delivery surcharge,3,165.00,495.00,49.50,544.50,Shipping
+INV-007,Nexus Software Ltd,2024-11-01,2024-12-01,Enterprise license renewal,1,45000.00,45000.00,4500.00,49500.00,Software Licenses
+INV-008,Bright Office Cleaning,2024-11-05,2024-12-05,Monthly office cleaning,1,2800.00,2800.00,280.00,3080.00,Facilities
+INV-009,TechRecruit Partners,2024-11-10,2024-12-10,Engineering placement fee,1,35000.00,35000.00,3500.00,38500.00,Professional Services
+INV-010,Unknown Vendor XYZ,2024-11-12,2024-11-12,Miscellaneous charges,1,99999.00,99999.00,25000.00,124999.00,Uncategorized

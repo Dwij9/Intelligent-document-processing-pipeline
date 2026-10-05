@@ -1,0 +1,187 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idp-backend
+  labels:
+    app: idp-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: idp-backend
+  template:
+    metadata:
+      labels:
+        app: idp-backend
+    spec:
+      containers:
+        - name: backend
+          image: idp-backend:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PORT
+              value: "4000"
+            - name: NODE_ENV
+              value: production
+            - name: ML_SERVICE_URL
+              value: http://idp-ml-service:8000
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: idp-secrets
+                  key: mongodb-uri
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: idp-secrets
+                  key: llm-api-key
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: idp-secrets
+                  key: jwt-secret
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 4000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idp-ml-service
+  labels:
+    app: idp-ml-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: idp-ml-service
+  template:
+    metadata:
+      labels:
+        app: idp-ml-service
+    spec:
+      containers:
+        - name: ml-service
+          image: idp-ml-service:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: idp-secrets
+                  key: llm-api-key
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: idp-secrets
+                  key: mongodb-uri
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 15
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idp-frontend
+  labels:
+    app: idp-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: idp-frontend
+  template:
+    metadata:
+      labels:
+        app: idp-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: idp-frontend:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idp-mongodb
+  labels:
+    app: idp-mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: idp-mongodb
+  template:
+    metadata:
+      labels:
+        app: idp-mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:7
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 10Gi

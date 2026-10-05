@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: mongosh --eval "db.adminCommand('ping')" --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ml-service:
+    build: ./ml-service
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_PROVIDER=${LLM_PROVIDER:-openai}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o}
+      - MONGODB_URI=mongodb://mongo:27017/docpipeline
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - upload_data:/app/uploads
+
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/docpipeline
+      - ML_SERVICE_URL=http://ml-service:8000
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_PROVIDER=${LLM_PROVIDER:-openai}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o}
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
+      - PORT=4000
+      - NODE_ENV=development
+    depends_on:
+      mongo:
+        condition: service_healthy
+      ml-service:
+        condition: service_started
+    volumes:
+      - upload_data:/app/uploads
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:4000/api
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+  upload_data:
